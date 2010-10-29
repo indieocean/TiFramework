@@ -56,7 +56,7 @@ Just some dummy data for examples
     	{ title: 'Test', hasChild: true }
     ];
 
-Put a table with data in an already created winow
+Put a table with data in an already created window
 
     $(main_window).tableView({data: data});
 

@@ -113,9 +113,9 @@ TiFramework.prototype = function(context) {
 	 * @param object opts
 	 */
 	this.setOpts = function(opts) {		
-		// @TODO For some reason this doesn't work at all.  Something with the prop var and type?
+
 		for(var prop in opts) {
-			this.context.prop = opts[prop];
+			this.context[prop] = opts[prop];
 		}
 	
 		return this;
