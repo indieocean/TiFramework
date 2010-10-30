@@ -75,4 +75,22 @@ Create a new view, add a label to it, append the view to the existing window, ad
     	.click(function(e) {
     		alert('View Clicked');
     	});
+    	
+    	
+Use the AJAX method to create rows that are populated from a twitter feed
+
+    var options = {
+    	timeout: 3000, 
+    	type: 'GET',		
+    	url: 'http://search.twitter.com/search.json?q=from:appcelerator'				
+    };
+
+    $.ajax(options, function(data) {
+    	var customTableView = $('table').appendTo(second_window);
+
+    	for (var i = 0; i < data.results.length; i++) {
+    		customTableView.row({title: data.results[i].text});
+    	};
+    });
+
 

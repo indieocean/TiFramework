@@ -77,7 +77,11 @@ TiFramework.prototype = function(context) {
 				
 			case 'tabgroup':
 				this.context = Ti.UI.createTabGroup();
-				break;							
+				break;
+				
+			case 'row':
+				this.context = Ti.UI.createTableViewRow();
+				break;											
 		}
 	}
 
@@ -126,7 +130,7 @@ TiFramework.prototype = function(context) {
 	 * @param object
 	 */
 	this.appendTo = function(element) {
-		element.add(this.context);
+		element.context.add(this.context);
 	
 		return this;
 	};
@@ -139,7 +143,17 @@ TiFramework.prototype = function(context) {
 		this.context.add(element);
 	
 		return this;
-	};	
+	};
+	
+	/** Wrapper for the native appendRow method
+	 *
+	 * @param object
+	 */
+	this.addRowTo = function(element) {
+		element.context.appendRow(this.context);
+	
+		return this;
+	};		
 	
 	/** Open the current context
 	 *
@@ -175,7 +189,24 @@ TiFramework.prototype = function(context) {
 		this.context.add(tableview);
 		
 		return this;
-	};	
+	};
+	
+	/** Create and add a row to an existing table
+	 *
+	 * @param object opts
+	 * @param object props	
+	 */
+	this.row = function(opts, props) {
+		var row = Ti.UI.createTableViewRow(opts);
+		
+		if(!props) {
+			this.context.appendRow(row);			
+		} else {
+			this.context.appendRow(row, props);
+		}
+		
+		return this;
+	};		
 	
 	/** Create and add a label
 	 *
@@ -201,7 +232,77 @@ TiFramework.prototype = function(context) {
 		return this;
 	};	
 	
+
+/** UTILITIES **/
 	
 	/** Return the global object */
 	return this;
+};
+
+
+/** UTILITIY EXTENSTIONS **/
+
+/**
+ * Basic XHR connection
+ *
+ * @param object opts	
+ */	
+TiFramework.ajax = function(opts, callback) {
+	// Setup the xhr object
+	var xhr = Ti.Network.createHTTPClient();
+
+	/**
+		AVAILABLE OPTIONS
+		
+		timeout 	: int Timeout request
+		type		: string GET/POST
+		data		: mixed The data to pass
+		url			: string The url source to call
+		onerror		: funtion A function to execute when there is an XHR error
+	*/
+
+	// Set the timeout or a default if one is not provided
+	xhr.timeout = (opts.timeout) ? opts.timeout : 10000;	
+
+	// Error Handling
+	xhr.onerror = function(e) {
+		if(opts.onerror) {
+			opts.onerror(e);				
+		} else {
+			Ti.API.info(e.error);
+		}
+	};
+
+
+	// Execute when xhr is loaded
+	xhr.onload = function() {
+		// If successful
+		try {
+			if (this.responseText == 'null') {
+				Ti.API.info(this);
+			} else {
+			
+				// Store the response
+				var data = eval('('+this.responseText+')');
+
+				// Execute a callback function
+				callback(data);
+			}
+
+		}
+		// If not successful
+		catch(e) {
+			if(opts.onerror) {
+				opts.onerror(e);				
+			} else {
+				Ti.API.info(e);
+			}
+		}
+	};
+
+	// Open the remote connection
+	xhr.open(opts.type, opts.url);
+
+	// send the data
+	xhr.send(opts.data);	
 };
