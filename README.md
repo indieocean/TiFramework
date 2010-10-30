@@ -36,16 +36,16 @@ Create a new window.  Notice .context is appended.  That way the variable is act
 storing the window object itself and not the full TiFramework class.  Probably
 should be rewritten so this isn't necessary.
 
-NOTE:  It will take two types for it's arguement.  You can pass it a string such as "window", "label", "view", etc.  This will create a new UI object of that name.  Or you can pass an already created object as the argument.  Below we're creating two new windows.  If I wanted to reference one of the windows below for the framework's use I would use **'$(main_window)'** or **'$(second_window)'**
+NOTE:  It will take two types for it's argument.  You can pass it a string such as "window", "label", "view", etc.  This will create a new UI object of that name.  Or you can pass an already created, native Titanium object as the argument.*
 
-    var main_window 	= $('window').context;
-    var second_window 	= $('window').context;
+    var main_window 	= $('window');
+    var second_window 	= $('window');
 
-Create a new tabgroup, add new tabs, assign tabs the appropriate window, open the tab group
+Create a new tabgroup, add new tabs, assign tabs the appropriate window, open the tab group.  Notice that the window values have .context appended.  This is because we need to pass in the literal Titanium object, not the framework object.
 
     $('tabgroup')
-    		.tab({title: 'Examples', window: main_window})
-    		.tab({title: 'Second Tab', window: second_window})
+    		.tab({title: 'Examples', window: main_window.context})
+    		.tab({title: 'Second Tab', window: second_window.context})
     	.open();
 
 Just some dummy data for examples
@@ -58,11 +58,11 @@ Just some dummy data for examples
 
 Put a table with data in an already created window
 
-    $(main_window).tableView({data: data});
+    main_window.tableView({data: data});
 
 Put a new label on an existing window
 
-    $(main_window)
+    main_window
     	.label({text: 'New Label', zIndex: 9999, color: '#333', textAlign: 'center', height: 50, bottom: 10})
     	.click(function(e) {
     		alert('Label Clicked');
