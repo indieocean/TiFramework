@@ -18,6 +18,8 @@ The following are the goals of the project:
 
 * **`OOP`**: The end goal is not to just have a few wrapper methods that allow others to chain UI objects together but to have an OO framework which can be used for an entire app.  This includes things as models, controllers, event driven, etc.
 
+* **`Remove barrier to entry`**: The Titanium API is a really simple concept but some people have a difficult time getting their head wrapped around the concepts.  This library is meant to lessen the learning curve and barrier to entry.
+
 If you want to make it better
 -----------------------------
 I'm definitely not the smartest on Github so if you see a way to make the framework much better, add more functionality, etc.  Please contribute!  As the framework grows I'd love to post some info on best practices, proper naming and coding conventions, etc.  This thing will evolve as long as others are contributing and helping improve it!
@@ -92,5 +94,23 @@ Use the AJAX method to create rows that are populated from a twitter feed
     		customTableView.row({title: data.results[i].text});
     	};
     });
+
+
+Roadmap
+-----------------------------
+**Version 0.1 `Zergling`**
+The following list is a tentative list of things I'd like to see get implemented for **0.1**
+
+* **`.clone()`**:  Duplicate the selected object for reuse
+* **`.empty()`**:  Remove all child objects of the current context
+* **`.emptyTable()`**:  Remove all rows of a given table
+* **`.filter()`**: Select a specific child object from the context (by type or index).  This will, by default make the filterable object the new context.
+* **`.getProp()`**: Gets a specific property from the current context (just a quick helper method.  the same can already be achieved by doing `someObj.context.someProp`)
+* More Ti.UI support: dialogs, buttons, animation, ActivityIndicator, imageView, OptionDialog, Picker, ScrollView, SearchBar, Slider, Switch, Tab (partially implemented already), TableViewSection, Textarea / TextField, WebView
+* Object helpers (i.e. .each() to loop through object properties.  .merge() to merge different objects, etc.)
+* Array helpers
+* String helpers
+* Class creator:  Used for better maintaining OOP code throughout an app.
+* MVC helpers (for creating models, views, controllers)
 
 
