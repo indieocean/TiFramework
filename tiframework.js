@@ -81,7 +81,27 @@ TiFramework.prototype = function(context) {
 				
 			case 'row':
 				this.context = Ti.UI.createTableViewRow();
-				break;											
+				break;	
+				
+			case 'image':
+				this.context = Ti.UI.createImageView();
+				break;	
+				
+			case 'button':
+				this.context = Ti.UI.createButton();
+				break;	
+				
+			case 'email':
+				this.context = Ti.UI.createEmailDialog();
+				break;
+				
+			case 'web':
+				this.context = Ti.UI.createWebView();
+				break;
+				
+			case 'paypal':
+				this.context = Ti.Paypal.createPaypalButton();
+				break;
 		}
 	}
 
@@ -117,13 +137,14 @@ TiFramework.prototype = function(context) {
 	 * @param object opts
 	 */
 	this.setOpts = function(opts) {		
-
-		for(var prop in opts) {
-			this.context[prop] = opts[prop];
+		if(opts) {
+			for(var prop in opts) {
+				this.context[prop] = opts[prop];
+			}			
 		}
 	
 		return this;
-	};	
+	};		
 
 	/** Append current context to the indicated element
 	 *
@@ -161,6 +182,37 @@ TiFramework.prototype = function(context) {
 	 */
 	this.open = function(opts) {
 		this.context.open(opts);
+		
+		return this;
+	};	
+	
+	/** Helper method of getting the children of an object
+	 *
+	 * @param int index
+	 */
+	this.children = function(index) {
+		if(index) {
+			return this.context.children[index];
+		} else if(!index) {
+			return this.context.children;
+		}
+	};
+	
+	/** Removes child items of specified context
+	 *
+	 * @param int index
+	 */
+	this.empty = function(index) {
+		// @TODO This currently crashes.  In fact the native .remove() method crashes
+		// on any object.  Bug in 1.4.1.1?
+		// If optional index provided, remove just that one
+		if(index) {
+			this.context.children[index].remove();
+		} else if(!index) {
+			for(var i = 0; i < this.context.children.length; i++) {
+				this.context.children[i].remove();
+			}
+		}
 		
 		return this;
 	};	
@@ -220,6 +272,31 @@ TiFramework.prototype = function(context) {
 		return this;
 	};
 	
+	/** Create and add an image view
+	 *
+	 * @param object opts
+	 */
+	this.image = function(opts) {
+		var image = Ti.UI.createImageView(opts);
+		
+		this.context.add(image);
+		
+		return this;
+	};	
+	
+	/** Create and add a PayPal button
+	 *
+	 * @required PayPal module
+	 * @param object opts
+	 */
+	this.paypal = function(opts) {
+		var paypalBtn = Ti.Paypal.createPaypalButton(opts);
+		
+		this.context.add(paypalBtn);
+		
+		return this;
+	};	
+	
 	/** Create and add a tab to a tab group
 	 *
 	 * @param object opts
@@ -232,8 +309,26 @@ TiFramework.prototype = function(context) {
 		return this;
 	};	
 	
-
-/** UTILITIES **/
+	/** Wrapper for native hideNavBar method
+	 *
+	 */
+	this.hideNavBar = function() {
+		
+		this.context.hideNavBar();
+		
+		return this;
+	};
+	
+	/** Wrapper for native hideTabBar method
+	 *
+	 */
+	this.hideTabBar = function() {
+		
+		this.context.hideTabBar();
+		
+		return this;
+	};		
+	
 	
 	/** Return the global object */
 	return this;
@@ -245,7 +340,8 @@ TiFramework.prototype = function(context) {
 /**
  * Basic XHR connection
  *
- * @param object opts	
+ * @param object opts
+ * @param function callback	
  */	
 TiFramework.ajax = function(opts, callback) {
 	// Setup the xhr object
