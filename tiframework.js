@@ -81,7 +81,6 @@ TiFramework.prototype = function(context) {
 				
 			case 'row':
 				this.context = Ti.UI.createTableViewRow();
-<<<<<<< HEAD
 				break;	
 				
 			case 'image':
@@ -102,12 +101,10 @@ TiFramework.prototype = function(context) {
 				
 			case 'paypal':
 				this.context = Ti.Paypal.createPaypalButton();
-=======
 				break;
 			
 			case 'currentWin':
 				this.context = Ti.UI.currentWindow;
->>>>>>> 814789ffae0bb06d39dac4c2cd84210dcf80e234
 				break;
 		}
 	}
