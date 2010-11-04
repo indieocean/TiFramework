@@ -81,6 +81,7 @@ TiFramework.prototype = function(context) {
 				
 			case 'row':
 				this.context = Ti.UI.createTableViewRow();
+<<<<<<< HEAD
 				break;	
 				
 			case 'image':
@@ -101,6 +102,12 @@ TiFramework.prototype = function(context) {
 				
 			case 'paypal':
 				this.context = Ti.Paypal.createPaypalButton();
+=======
+				break;
+			
+			case 'currentWin':
+				this.context = Ti.UI.currentWindow;
+>>>>>>> 814789ffae0bb06d39dac4c2cd84210dcf80e234
 				break;
 		}
 	}
@@ -161,7 +168,11 @@ TiFramework.prototype = function(context) {
 	 * @param object
 	 */
 	this.append = function(element) {
-		this.context.add(element);
+		if( typeof(element.context) == 'undefined'){
+			this.context.add(element);
+		}else{
+			this.context.add(element.context);
+		}
 	
 		return this;
 	};
