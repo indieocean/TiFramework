@@ -123,6 +123,18 @@ TiFramework.prototype = function(context) {
 
 		return this;
 	};
+	
+	/** Focus event helper
+	 *
+	 * @param callback
+	 */
+	this.focus = function(callback) {		
+		this.context.addEventListener('focus', function(e) {
+			callback(e);
+		});
+
+		return this;
+	};	
 
 /** --- UI UTILITIES --- */
 
@@ -143,7 +155,9 @@ TiFramework.prototype = function(context) {
 	this.setOpts = function(opts) {		
 		if(opts) {
 			for(var prop in opts) {
-				this.context[prop] = opts[prop];
+				if (opts.hasOwnProperty(prop)) {
+					this.context[prop] = opts[prop];
+				}
 			}			
 		}
 	
@@ -348,15 +362,15 @@ TiFramework.prototype = function(context) {
 		this.context.opacity = 0;
 		
 		if(opts == null) {
-			this.context.animate({
+			opts = {
 				left: 0,
 				opacity: 1,
 				duration: 700
-			});			
+			};		
 		} else {
-			(!opts.hasOwnProperty('left')) ? opts.left = 0 : opts.left;
-			(!opts.hasOwnProperty('opacity')) ? opts.opacity = 1 : opts.opacity;
-			(!opts.hasOwnProperty('duration')) ? opts.duration = 700 : opts.duration;			
+			opts.left 		= (!opts.hasOwnProperty('left')) 		? 0 : opts.left;
+			opts.opacity 	= (!opts.hasOwnProperty('opacity')) 	? 1 : opts.opacity;
+			opts.duration 	= (!opts.hasOwnProperty('duration')) 	? 700 : opts.duration;			
 		}
 		
 		this.context.animate(opts, function() {
@@ -373,17 +387,44 @@ TiFramework.prototype = function(context) {
 	 * @param object opts
 	 * @param function callback	
 	 */	
-	this.slideOut = function(opts, callback) {	
+	this.slideOut = function(opts, callback) {
 		if(opts == null) {
-			this.context.animate({
+			opts = {
 				left: -Ti.Platform.displayCaps.platformWidth,
 				opacity: 0,
 				duration: 700
-			});			
+			};			
 		} else {
-			(!opts.hasOwnProperty('left')) ? opts.left = -Ti.Platform.displayCaps.platformWidth : opts.left;
-			(!opts.hasOwnProperty('opacity')) ? opts.opacity = 0 : opts.opacity;
-			(!opts.hasOwnProperty('duration')) ? opts.duration = 700 : opts.duration;			
+			opts.left 		=	(!opts.hasOwnProperty('left')) 		? -Ti.Platform.displayCaps.platformWidth : opts.left;
+			opts.opacity 	=	(!opts.hasOwnProperty('opacity')) 	? 0 : opts.opacity;
+			opts.duration 	=  	(!opts.hasOwnProperty('duration')) 	? 700 : opts.duration;			
+		}
+		
+		this.context.animate(opts, function() {
+			if(typeof callback == 'function') {
+				callback(this.context);
+			}
+		});
+		
+		return this;
+	};
+	
+	/** Fade in an element
+	 *
+	 * @param object opts
+	 * @param function callback	
+	 */	
+	this.fadeIn = function(opts, callback) {
+		this.context.opacity = 0;
+		
+		if(opts == null) {
+			opts = {
+				opacity: 1,
+				duration: 700
+			};			
+		} else {
+			opts.opacity 	= (!opts.hasOwnProperty('opacity'))	? 1 : opts.opacity;
+			opts.duration 	= (!opts.hasOwnProperty('duration')) ? 700 : opts.duration;			
 		}
 		
 		this.context.animate(opts, function() {
@@ -394,6 +435,31 @@ TiFramework.prototype = function(context) {
 		
 		return this;
 	};	
+	
+	/** Fade out an element
+	 *
+	 * @param object opts
+	 * @param function callback	
+	 */	
+	this.fadeOut = function(opts, callback) {
+		if(opts == null) {
+			opts = {
+				opacity: 0,
+				duration: 700
+			};			
+		} else {
+			opts.opacity 	= (!opts.hasOwnProperty('opacity')) 	? 0 : opts.opacity;
+			opts.duration 	= (!opts.hasOwnProperty('duration')) 	? 700 : opts.duration;			
+		}
+		
+		this.context.animate(opts, function() {
+			if(typeof callback == 'function') {
+				callback(this.context);
+			}
+		});
+		
+		return this;
+	};		
 
 	
 /** --- Return the global object --- */
@@ -433,6 +499,8 @@ TiFramework.ajax = function(opts, callback) {
 		} else {
 			Ti.API.info(e.error);
 		}
+		
+		return e;
 	};
 
 
