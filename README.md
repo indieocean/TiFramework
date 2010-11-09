@@ -94,6 +94,19 @@ Use the AJAX method to create rows that are populated from a twitter feed
     		customTableView.row({title: data.results[i].text});
     	};
     });
+    
+slideIn() / slideOut() can be used to hide / show elements using animation.  The the methods take two optional arguments: (1) an options object with any custom animation settings, (2) A callback
+
+    var main_window = $('currentWin');
+
+    var label = $('label').setOpts({text: 'New Label'}).appendTo(main_window).slideIn();
+
+    label.context.addEventListener('click', function() {
+	    label.slideOut({duration: 1000}, function(){
+          alert('Label Slid Out);
+	    });
+    });
+   
 
 
 Roadmap

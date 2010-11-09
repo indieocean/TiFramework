@@ -336,9 +336,67 @@ TiFramework.prototype = function(context) {
 		
 		return this;
 	};		
+
+/** --- ANIMATION METHODS --- */
+	/** Slide an element in
+	 *
+	 * @param object opts
+	 * @param function callback		
+	 */	
+	this.slideIn = function(opts, callback) {	
+		this.context.left = -Ti.Platform.displayCaps.platformWidth;
+		this.context.opacity = 0;
+		
+		if(opts == null) {
+			this.context.animate({
+				left: 0,
+				opacity: 1,
+				duration: 700
+			});			
+		} else {
+			(!opts.hasOwnProperty('left')) ? opts.left = 0 : opts.left;
+			(!opts.hasOwnProperty('opacity')) ? opts.opacity = 1 : opts.opacity;
+			(!opts.hasOwnProperty('duration')) ? opts.duration = 700 : opts.duration;			
+		}
+		
+		this.context.animate(opts, function() {
+			if(typeof callback == 'function') {
+				callback(this.context);
+			}
+		});
+		
+		return this;
+	};
 	
+	/** Slide an element out
+	 *
+	 * @param object opts
+	 * @param function callback	
+	 */	
+	this.slideOut = function(opts, callback) {	
+		if(opts == null) {
+			this.context.animate({
+				left: -Ti.Platform.displayCaps.platformWidth,
+				opacity: 0,
+				duration: 700
+			});			
+		} else {
+			(!opts.hasOwnProperty('left')) ? opts.left = -Ti.Platform.displayCaps.platformWidth : opts.left;
+			(!opts.hasOwnProperty('opacity')) ? opts.opacity = 0 : opts.opacity;
+			(!opts.hasOwnProperty('duration')) ? opts.duration = 700 : opts.duration;			
+		}
+		
+		this.context.animate(opts, function() {
+			if(typeof callback == 'function') {
+				callback(this.context);
+			}
+		});
+		
+		return this;
+	};	
+
 	
-	/** Return the global object */
+/** --- Return the global object --- */
 	return this;
 };
 
@@ -409,4 +467,15 @@ TiFramework.ajax = function(opts, callback) {
 
 	// send the data
 	xhr.send(opts.data);	
+};
+
+
+/**
+ * Rapid UI Builder
+ *
+ * @param string element
+ * @param object opts	
+ */	
+TiFramework.Builder = function(element, opts) {
+	this.opts = opts;
 };
