@@ -101,7 +101,7 @@ slideIn() / slideOut() can be used to hide / show elements using animation.  The
 
     var label = $('label').setOpts({text: 'New Label'}).appendTo(main_window).slideIn();
 
-    label.context.addEventListener('click', function() {
+    label.click(function() {
 	    label.slideOut({duration: 1000}, function(){
           alert('Label Slid Out);
 	    });
