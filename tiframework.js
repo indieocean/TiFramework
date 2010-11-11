@@ -38,10 +38,10 @@ var TI_FRAMEWORK_VERSION 	= '0.1',
  */	
 function TiFramework(context) {
 	// Return the new framework class
-	return new TiFramework.prototype(context);
+	return new TiFramework.core(context);
 };
 
-TiFramework.prototype = function(context) {
+TiFramework.core = TiFramework.prototype = function(context) {
 	// Make the context accessible
 	this.context = context;
 	
@@ -112,26 +112,35 @@ TiFramework.prototype = function(context) {
 
 /** --- EVENT HELPERS --- */
 
-	/** Click event helper
+	/** Add event wrapper
 	 *
-	 * @param callback
+	 * @param string event
+	 * @param function callback	
 	 */
-	this.click = function(callback) {		
-		this.context.addEventListener('click', function(e) {
+	this.event = function(event, callback) {		
+		this.context.addEventListener(event, function(e) {
 			callback(e);
 		});
+
+		return this;
+	};
+
+	/** Click event helper
+	 *
+	 * @param function callback
+	 */
+	this.click = function(callback) {		
+		this.event('click', callback);
 
 		return this;
 	};
 	
 	/** Focus event helper
 	 *
-	 * @param callback
+	 * @param function callback
 	 */
 	this.focus = function(callback) {		
-		this.context.addEventListener('focus', function(e) {
-			callback(e);
-		});
+		this.event('focus', callback);
 
 		return this;
 	};	
@@ -257,7 +266,7 @@ TiFramework.prototype = function(context) {
 	 *
 	 * @param object opts
 	 */
-	this.tableView = function(opts) {
+	this.table = function(opts) {
 		var tableview = Ti.UI.createTableView(opts);
 		
 		this.context.add(tableview);
@@ -466,6 +475,8 @@ TiFramework.prototype = function(context) {
 	return this;
 };
 
+// Re-assign the Tiframework prototype to the main namespace for access
+TiFramework.prototype = TiFramework;
 
 /** UTILITIY EXTENSTIONS **/
 
@@ -475,7 +486,7 @@ TiFramework.prototype = function(context) {
  * @param object opts
  * @param function callback	
  */	
-TiFramework.ajax = function(opts, callback) {
+TiFramework.core.prototype.ajax = function(opts, callback) {
 	// Setup the xhr object
 	var xhr = Ti.Network.createHTTPClient();
 
@@ -534,7 +545,9 @@ TiFramework.ajax = function(opts, callback) {
 	xhr.open(opts.type, opts.url);
 
 	// send the data
-	xhr.send(opts.data);	
+	xhr.send(opts.data);
+	
+	return true;	
 };
 
 
