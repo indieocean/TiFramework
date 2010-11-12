@@ -81,19 +81,18 @@ Create a new view, add a label to it, append the view to the existing window, ad
     	
 Use the AJAX method to create rows that are populated from a twitter feed
 
-    var options = {
-    	timeout: 3000, 
-    	type: 'GET',		
-    	url: 'http://search.twitter.com/search.json?q=from:appcelerator'				
-    };
+      $.ajax({
+      	timeout: 3000, 
+      	type: 'GET',		
+      	url: 'http://search.twitter.com/search.json?q=from:appcelerator',
+      	callback: function(data) {
+      		var customTableView = $('table').appendTo(second_window);
 
-    $.ajax(options, function(data) {
-    	var customTableView = $('table').appendTo(second_window);
-
-    	for (var i = 0; i < data.results.length; i++) {
-    		customTableView.row({title: data.results[i].text});
-    	};
-    });
+      		for (var i = 0; i < data.results.length; i++) {
+      			customTableView.row({title: data.results[i].text});
+      		};		
+      	}
+      });
     
 slideIn() / slideOut() can be used to hide / show elements using animation.  The the methods take two optional arguments: (1) an options object with any custom animation settings, (2) A callback
 
@@ -107,12 +106,28 @@ slideIn() / slideOut() can be used to hide / show elements using animation.  The
 	    });
     });
    
+   
+Extending the framework is very similar to jQuery:
 
+      (function() {
+      	var options = { string: 'Default String' };
+	
+      	TiFramework.extend('test', function(string) {
+      		if (string == undefined) {
+      			alert(options.string);
+      		} else {
+      			alert(string);			
+      		}
+      	});
+	
+      })(TiFramework);
+      
+Now, you have a plugin called `test()` that can be chained or used as a stand-alone function (i.e. `$.test('some test')` or `someWindow.test('cool!')` )      
 
 Roadmap
 -----------------------------
 **Version 0.1 `Zergling`**
-The following list is a tentative list of things I'd like to see get implemented for **0.1**
+Version 0.1 is an evolving version.  When 0.2 is reached the code will be stable and won't incur any broken functionality if subsequent versions are implemented (hopefully).  The following list is a tentative list of things I'd like to see get implemented for **0.1**
 
 * **`.clone()`**:  Duplicate the selected object for reuse
 * **`.empty()`**:  Remove all child objects of the current context
@@ -123,7 +138,7 @@ The following list is a tentative list of things I'd like to see get implemented
 * Object helpers (i.e. .each() to loop through object properties.  .merge() to merge different objects, etc.)
 * Array helpers
 * String helpers
-* Class creator:  Used for better maintaining OOP code throughout an app.
+* Interface builder:  To help rapidly create specific interfaces / UI.  Might be a plugin / extension down the road though.
 * MVC helpers (for creating models, views, controllers)
 
 

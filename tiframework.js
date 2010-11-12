@@ -57,8 +57,6 @@ TiFramework.core = TiFramework.prototype = function(context) {
 	if(typeof this.context === 'string') {
 		// Determine the string context
 		switch(this.context) {
-			// @TODO Should these use the UI helper methods below and open automatically or defer to the open() method?
-			// The latter is more verbose but gives more control on when UI elements are drawn out
 			case 'window':
 				this.context = Ti.UI.createWindow();
 				break;
@@ -108,7 +106,6 @@ TiFramework.core = TiFramework.prototype = function(context) {
 				break;
 		}
 	}
-
 
 /** --- EVENT HELPERS --- */
 
@@ -479,6 +476,24 @@ TiFramework.core = TiFramework.prototype = function(context) {
 TiFramework.prototype = TiFramework;
 
 /** UTILITIY EXTENSTIONS **/
+/**
+ * Allows for extending the framework while keeping it in context
+ *
+ * @param string 	name 		Name of the new extension
+ * @param function 	extension 	The extension function 	
+ */
+TiFramework.prototype.extend = function(name, extension) {
+	var extName = name;
+
+	// Note: The reason why I extend the prototype of TiFramework AND the core
+	// is so it can be chainable or stand alone (i.e. $.YourExt())
+	// I'm not sure of another way to do this.
+	TiFramework.prototype[extName] = TiFramework.core.prototype[extName] = function(args) {
+		extension(args);
+		
+		return this;
+	};
+};
 
 /**
  * Basic XHR connection
@@ -486,7 +501,7 @@ TiFramework.prototype = TiFramework;
  * @param object opts
  * @param function callback	
  */	
-TiFramework.core.prototype.ajax = function(opts, callback) {
+TiFramework.extend('ajax', function(opts) {
 	// Setup the xhr object
 	var xhr = Ti.Network.createHTTPClient();
 
@@ -518,7 +533,8 @@ TiFramework.core.prototype.ajax = function(opts, callback) {
 	// Execute when xhr is loaded
 	xhr.onload = function() {
 		// If successful
-		try {
+		try 
+		{
 			if (this.responseText == 'null') {
 				Ti.API.info(this);
 			} else {
@@ -526,19 +542,25 @@ TiFramework.core.prototype.ajax = function(opts, callback) {
 				// Store the response
 				var data = eval('('+this.responseText+')');
 
-				// Execute a callback function
-				callback(data);
+				if(opts.callback) {
+					// Execute a callback function
+					opts.callback(data);					
+				} else {
+					return data;
+				}
 			}
-
 		}
 		// If not successful
-		catch(e) {
+		catch(e) 
+		{
 			if(opts.onerror) {
 				opts.onerror(e);				
 			} else {
 				Ti.API.info(e);
 			}
 		}
+		
+		return true;
 	};
 
 	// Open the remote connection
@@ -546,9 +568,7 @@ TiFramework.core.prototype.ajax = function(opts, callback) {
 
 	// send the data
 	xhr.send(opts.data);
-	
-	return true;	
-};
+});
 
 
 /**
@@ -557,6 +577,6 @@ TiFramework.core.prototype.ajax = function(opts, callback) {
  * @param string element
  * @param object opts	
  */	
-TiFramework.Builder = function(element, opts) {
+TiFramework.core.prototype.Builder = function(element, opts) {
 	this.opts = opts;
 };
