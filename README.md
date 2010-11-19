@@ -60,7 +60,7 @@ Just some dummy data for examples
 
 Put a table with data in an already created window
 
-    main_window.tableView({data: data});
+    main_window.table({data: data});
 
 Put a new label on an existing window
 
