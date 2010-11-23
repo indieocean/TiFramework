@@ -79,6 +79,7 @@ TiFramework.core = TiFramework.prototype = function(context) {
 				
 			case 'navigationgroup':
 	            this.context = Ti.UI.iPhone.createNavigationGroup();				
+				break;
 				
 			case 'row':
 				this.context = Ti.UI.createTableViewRow();
@@ -103,7 +104,15 @@ TiFramework.core = TiFramework.prototype = function(context) {
 			case 'paypal':
 				this.context = Ti.Paypal.createPaypalButton();
 				break;
-			
+				
+			case 'map':
+				this.context = Ti.Map.createView();
+				break;
+				
+			case 'mapannotation':
+				this.context = Ti.Map.createAnnotation();
+				break;
+				
 			case 'currentWin':
 				this.context = Ti.UI.currentWindow;
 				break;
@@ -213,6 +222,35 @@ TiFramework.core = TiFramework.prototype = function(context) {
 	 */
 	this.open = function(opts) {
 		this.context.open(opts);
+		
+		return this;
+	};
+	
+	/** Close the current context
+	 *
+	 * @param object opts
+	 */
+	this.close = function(opts) {
+		this.context.close(opts);
+		
+		return this;
+	};
+	
+	/** Remove the current context
+	 *
+	 * @param object opts
+	 */
+	this.remove = function(opts) {
+		this.context.remove(opts);
+		
+		return this;
+	};
+	
+	/** Hide the current context
+	 *
+	 */
+	this.hide = function() {
+		this.context.hide();
 		
 		return this;
 	};
