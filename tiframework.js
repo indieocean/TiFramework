@@ -30,6 +30,7 @@
 // @TODO Not implemented yet
 var TI_FRAMEWORK_VERSION 	= '0.1', 
 	TI_FRAMEWORK_CODENAME 	= 'Zergling';
+	TI_FRAMEWORK_LOG_ENABLED   = true;
 
 /**
  * The Framework class
@@ -78,7 +79,7 @@ TiFramework.core = TiFramework.prototype = function(context) {
 				break;
 				
 			case 'navigationgroup':
-	            this.context = Ti.UI.iPhone.createNavigationGroup();				
+				this.context = Ti.UI.iPhone.createNavigationGroup();				
 				break;
 				
 			case 'row':
@@ -617,6 +618,42 @@ TiFramework.extend('ajax', function(opts) {
 	xhr.send(opts.data);
 });
 
+/**
+ * Logger
+ * 
+ */
+TiFramework.prototype.Logger = {
+	info: function(message) {
+		if (TI_FRAMEWORK_LOG_ENABLED) {
+			Ti.API.info(message);
+		}
+	},
+	warn: function(message) {
+		if (TI_FRAMEWORK_LOG_ENABLED) {
+			Ti.API.warn(message);
+		}
+	},
+	error: function(message) {
+		if (TI_FRAMEWORK_LOG_ENABLED) {
+			Ti.API.error(message);
+		}
+	},
+	log: function(log, message) {
+		if (TI_FRAMEWORK_LOG_ENABLED) {
+			Ti.API.log(log, message);
+		}
+ 	}
+};
+
+/**
+ * Quick Debug Log
+ * 
+ */
+TiFramework.prototype.Log = function(message) {
+	if (TI_FRAMEWORK_LOG_ENABLED) {
+		Ti.API.log('DEBUG', message);
+	}
+};
 
 /**
  * Rapid UI Builder
