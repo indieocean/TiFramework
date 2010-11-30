@@ -31,7 +31,7 @@
 var TI_FRAMEWORK_VERSION 	= '0.1', 
 	TI_FRAMEWORK_CODENAME 	= 'Zergling';
 	TI_FRAMEWORK_LOG_ENABLED   = true;
-
+	
 /**
  * The Framework class
  *
@@ -72,7 +72,11 @@ TiFramework.core = TiFramework.prototype = function(context) {
 				
 			case 'label':
 				this.context = Ti.UI.createLabel();
-				break;	
+				break;
+			
+			case 'textfield':
+				this.context = Ti.UI.createTextField();
+				break;
 				
 			case 'tabgroup':
 				this.context = Ti.UI.createTabGroup();
@@ -175,7 +179,11 @@ TiFramework.core = TiFramework.prototype = function(context) {
 		if(opts) {
 			for(var prop in opts) {
 				if (opts.hasOwnProperty(prop)) {
-					this.context[prop] = opts[prop];
+					if (typeof(opts[prop].context) == 'undefined') {
+						this.context[prop] = opts[prop];
+					} else {
+						this.context[prop] = opts[prop].context;
+					}
 				}
 			}			
 		}
@@ -221,8 +229,17 @@ TiFramework.core = TiFramework.prototype = function(context) {
 	 *
 	 * @param object opts
 	 */
-	this.open = function(opts) {
-		this.context.open(opts);
+	this.open = function(element) {
+		if (element) {
+			if (typeof(element.context) == 'undefined') {
+				this.context.open(element);
+			}
+			else {
+				this.context.open(element.context);
+			}
+		} else {
+			this.context.open();
+		}
 		
 		return this;
 	};
@@ -231,18 +248,17 @@ TiFramework.core = TiFramework.prototype = function(context) {
 	 *
 	 * @param object opts
 	 */
-	this.close = function(opts) {
-		this.context.close(opts);
-		
-		return this;
-	};
-	
-	/** Remove the current context
-	 *
-	 * @param object opts
-	 */
-	this.remove = function(opts) {
-		this.context.remove(opts);
+	this.close = function(element) {
+		if (element) {
+			if (typeof(element.context) == 'undefined') {
+				this.context.close(element);
+			}
+			else {
+				this.context.close(element.context);
+			}
+		} else {
+			this.context.close();
+		}
 		
 		return this;
 	};
